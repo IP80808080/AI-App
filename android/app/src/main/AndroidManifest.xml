@@ -1,7 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.kasambe.gpt_dall">
    <application
-        android:label="gpt_dall"
+        android:label="Kepton"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
