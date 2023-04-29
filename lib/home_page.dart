@@ -27,8 +27,10 @@ class _HomePageState extends State<HomePage> {
 
   late TextEditingController textEditingController;
   late FocusNode focusNode;
+  late ScrollController _listScrollController;
   @override
   void initState() {
+    _listScrollController = ScrollController();
     textEditingController = TextEditingController();
     focusNode = FocusNode();
     super.initState();
@@ -36,6 +38,7 @@ class _HomePageState extends State<HomePage> {
 
   @override
   void dispose() {
+    _listScrollController.dispose();
     textEditingController.dispose();
     focusNode.dispose();
     super.dispose();
@@ -88,6 +91,7 @@ class _HomePageState extends State<HomePage> {
             children: [
               Flexible(
                 child: ListView.builder(
+                    controller: _listScrollController,
                     itemCount: chatList.length,
                     itemBuilder: (context, index) {
                       return ChatWidget(
@@ -106,11 +110,12 @@ class _HomePageState extends State<HomePage> {
                 height: 5,
               ),
               Container(
-                margin: const EdgeInsets.only(left: 1, right: 1, bottom: 3),
                 child: Material(
                   color: const Color(0xff181818),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.vertical(
+                      top: Radius.circular(15),
+                    ),
                   ),
                   child: Padding(
                     padding:
@@ -161,6 +166,13 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  void scrollListToEND() {
+    _listScrollController.animateTo(
+        _listScrollController.position.maxScrollExtent,
+        duration: const Duration(seconds: 2),
+        curve: Curves.easeOut);
+  }
+
   Future<void> sendMessageFCT({required ModelsProvider modelsProvider}) async {
     try {
       setState(() {
@@ -178,6 +190,7 @@ class _HomePageState extends State<HomePage> {
       log("error $error");
     } finally {
       setState(() {
+        scrollListToEND();
         _isTyping = false;
       });
     }
